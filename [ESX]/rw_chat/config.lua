@@ -35,3 +35,6 @@ Config.info = "superadmin"
 Config.support = "superadmin"
 Config.staff_announce = "superadmin"
 Config.event = "superadmin"
+
+Config.close = true
+Config.time = 8000

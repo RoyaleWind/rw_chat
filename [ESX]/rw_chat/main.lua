@@ -16,6 +16,13 @@ Citizen.CreateThread(function()
     end
 
     PlayerData = ESX.GetPlayerData()
+
+    while Config.close do
+        Citizen.Wait(Config.time)
+        SendNUIMessage({
+            action = 'hide_messages'
+        })
+    end    
 end)
 
 
@@ -76,6 +83,9 @@ Citizen.CreateThread(function()
             if IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) --[[ INPUT_MP_TEXT_CHAT_ALL ]] then
                 SetNuiFocus(true, true)
                 for k,v in pairs(Config.ChatTypes) do
+                    SendNUIMessage({
+                        action = 'show_messsages'
+                    })
                     SendNUIMessage({
                         action = 'show',
                         chat_types = Config.ChatTypes,

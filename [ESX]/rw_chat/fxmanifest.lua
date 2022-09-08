@@ -4,7 +4,7 @@ game 'gta5'
 ui_page 'ui/ui.html'
 
 author 'RoyaleWind'
-description '[ESX] MODERN CHAT'
+description 'MODERN CHAT'
 
 files {
 	'ui/ui.html',

@@ -22,6 +22,7 @@ AddEventHandler('rw_chat:addCommands', function(commands)
    TriggerServerEvent('rw_chat:serverCommands')
 
     loaded = true
+    
 
 end)
 
@@ -38,7 +39,16 @@ AddEventHandler('rw_chat:recieveCommands', function(commands)
     end
 end)
 
+Citizen.CreateThread(function()
 
+    while Config.close do
+        Citizen.Wait(Config.time)
+        SendNUIMessage({
+            action = 'hide_messages'
+        })
+    end    
+
+end)
 
 Citizen.CreateThread(function()
     SetTextChatEnabled(false)
@@ -54,6 +64,9 @@ Citizen.CreateThread(function()
                 SetNuiFocus(true, true)
                 for k,v in pairs(Config.ChatTypes) do
                     SendNUIMessage({
+                        action = 'show_messsages'
+                    })
+                    SendNUIMessage({
                         action = 'show',
                         chat_types = Config.ChatTypes,
                         commands = cmd
@@ -62,8 +75,8 @@ Citizen.CreateThread(function()
             end
 
         end
-    end          
-
+    end   
+    
 end)
 
 RegisterNetEvent('rw_chat:regmsg')

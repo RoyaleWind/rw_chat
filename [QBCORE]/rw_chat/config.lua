@@ -36,3 +36,6 @@ Config.support = "god"
 Config.staff_announce = "god"
 Config.event = "god"
 Config.ingamelog = "god" 
+
+Config.close = true
+Config.time = 8000
