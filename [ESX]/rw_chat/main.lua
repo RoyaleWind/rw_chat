@@ -3,6 +3,7 @@ ESX = nil
 local isRDR = not TerraingridActivate and true or false
 local loaded = false
 local cmd = {}
+local opened = false
 
 
 Citizen.CreateThread(function()
@@ -16,13 +17,7 @@ Citizen.CreateThread(function()
     end
 
     PlayerData = ESX.GetPlayerData()
-
-    while Config.close do
-        Citizen.Wait(Config.time)
-        SendNUIMessage({
-            action = 'hide_messages'
-        })
-    end    
+ 
 end)
 
 
@@ -68,6 +63,24 @@ AddEventHandler('rw_chat:recieveCommands', function(commands)
     end
 end)
 
+Citizen.CreateThread(function()
+
+    while Config.close and (not opened)do
+        Citizen.Wait(Config.time)
+        if(not opened) then
+            SendNUIMessage({
+                action = 'hide_messages'
+            })  
+        end
+    end    
+
+end)
+
+RegisterNUICallback("chatout", function(data)
+    if opened then
+       opened = false
+    end
+end)
 
 
 Citizen.CreateThread(function()
@@ -82,6 +95,7 @@ Citizen.CreateThread(function()
 
             if IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) --[[ INPUT_MP_TEXT_CHAT_ALL ]] then
                 SetNuiFocus(true, true)
+                opened = true
                 for k,v in pairs(Config.ChatTypes) do
                     SendNUIMessage({
                         action = 'show_messsages'

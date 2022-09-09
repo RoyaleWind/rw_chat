@@ -3,6 +3,8 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local isRDR = not TerraingridActivate and true or false
 local loaded = false
 local cmd = {}
+local opened = false
+
 
 
 
@@ -41,19 +43,26 @@ end)
 
 Citizen.CreateThread(function()
 
-    while Config.close do
+    while Config.close and (not opened)do
         Citizen.Wait(Config.time)
-        SendNUIMessage({
-            action = 'hide_messages'
-        })
+        if(not opened) then
+            SendNUIMessage({
+                action = 'hide_messages'
+            })  
+        end
     end    
 
+end)
+
+RegisterNUICallback("chatout", function(data)
+     if opened then
+        opened = false
+     end
 end)
 
 Citizen.CreateThread(function()
     SetTextChatEnabled(false)
     TriggerEvent('rw_chat:addCommands')
-
     if loaded then
         
 
@@ -61,17 +70,19 @@ Citizen.CreateThread(function()
             Citizen.Wait(0)
 
             if IsControlPressed(0, isRDR and `INPUT_MP_TEXT_CHAT_ALL` or 245) --[[ INPUT_MP_TEXT_CHAT_ALL ]] then
-                SetNuiFocus(true, true)
+               SetNuiFocus(true, true)
+               opened = true
+               SendNUIMessage({
+                action = 'show_messsages'
+                })
                 for k,v in pairs(Config.ChatTypes) do
-                    SendNUIMessage({
-                        action = 'show_messsages'
-                    })
                     SendNUIMessage({
                         action = 'show',
                         chat_types = Config.ChatTypes,
                         commands = cmd
                     })
                 end
+
             end
 
         end
@@ -97,14 +108,20 @@ RegisterNUICallback("mobile", function(data)
    local number = data.number
    local PlayerData = QBCore.Functions.GetPlayerData()
 
-
+   
        if not PlayerData.metadata['ishandcuffed'] and not PlayerData.metadata['inlaststand'] and not PlayerData.metadata['isdead'] and not IsPauseMenuActive() then
         if type == 'sms' then
-            print("SMS IS NOT AVAILABLE")
+
+            
+            ChatMessages = "SYSTEM:[NUMBER WAS FOUND BY ONLINE CHAT]"
+            ChatNumber = number
+            TriggerEvent('QBCore:Notify', 'message was send to'..number, 'primary', 10000)
+            TriggerServerEvent('qb-phone:server:UpdateMessages', ChatMessages, ChatNumber)
 
            elseif type == 'call' then
-            print("CALL NOT AVAILABLE")
 
+              print("CALL NOT AVAILABLE")
+ 
            end
        else
            QBCore.Functions.Notify("Action not available at the moment..", "error")
@@ -112,6 +129,11 @@ RegisterNUICallback("mobile", function(data)
 
 
 end)
+
+local function GenerateCallId(caller, target)
+    local CallId = math.ceil(((tonumber(caller) + tonumber(target)) / 100 * 1))
+    return CallId
+end
 
 
 RegisterNUICallback("send", function(data)
@@ -128,5 +150,3 @@ end)
 RegisterNUICallback("hide", function(data)
    SetNuiFocus(false, false)
 end)
-
-

@@ -593,6 +593,7 @@ function clearChat(){
 }
 
 function hideUI(){
+    $.post(`https://${GetParentResourceName()}/chatout`);
     $("#input_box").hide();
     $("#input_box").val("");
     $("#arrow").hide();
