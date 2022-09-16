@@ -64,15 +64,15 @@ AddEventHandler('rw_chat:recieveCommands', function(commands)
 end)
 
 Citizen.CreateThread(function()
-
-    while Config.close and (not opened)do
+while true do
+    Citizen.Wait(10)
+    if Config.close and (not opened)then
         Citizen.Wait(Config.time)
-        if(not opened) then
-            SendNUIMessage({
-                action = 'hide_messages'
-            })  
+        if (not opened) then
+            SendNUIMessage({action = 'hide_messages'})  
         end
-    end    
+    end   
+end 
 
 end)
 
@@ -160,5 +160,3 @@ end)
 RegisterNUICallback("hide", function(data)
    SetNuiFocus(false, false)
 end)
-
-
