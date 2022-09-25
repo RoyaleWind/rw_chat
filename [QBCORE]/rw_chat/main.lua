@@ -43,9 +43,9 @@ end)
 
 Citizen.CreateThread(function()
 
-    while Config.close and (not opened)do
+    while Config.close and (not opened) do
         Citizen.Wait(Config.time)
-        if(not opened) then
+        if (not opened) then
             SendNUIMessage({
                 action = 'hide_messages'
             })  
