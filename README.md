@@ -1,6 +1,6 @@
 # rw_chat
 
-# [ESX] + [QBCORE]
+# [ESX] + [QBCORE] + [STANDALONE]
 
 https://forum.cfx.re/t/free-rw-chat/4906889
 
